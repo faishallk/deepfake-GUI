@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepFake Detection</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #4CAF50;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="file"] {
+            margin: 15px 0;
+            padding: 10px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        /* Loading spinner animation */
+        .loading {
+            display: none;
+            margin-top: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4CAF50;
+
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;  
+            position: relative;
+            top: 50%; 
+            transform: translateY(-50%); 
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .result {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.5s ease;
+        }
+        .real {
+            background-color: #4CAF50;
+            color: white;
+            animation: fadeIn 1s ease;
+        }
+        .fake {
+            background-color: #f44336;
+            color: white;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DeepFake Detection App</h1>
+        <form action="/" method="post" enctype="multipart/form-data" id="uploadForm">
+            <input type="file" name="video" accept="video/*" required>
+            <button type="submit">Upload and Detect</button>
+        </form>
+
+        <!-- Loading spinner (hidden initially) -->
+        <div class="loading" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p>Loading... Please wait.</p>
+        </div>
+
+        <!-- Result display (hidden initially) -->
+        <div class="result" id="result" style="display: none;">
+            <!-- Result will be dynamically injected here -->
+        </div>
+    </div>
+
+    <script>
+        // Handle the form submission to show loading and result
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Show loading animation
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('result').style.display = 'none';  // Hide previous result
+
+            // Create FormData object to submit the video file
+            let formData = new FormData();
+            formData.append("video", document.querySelector('input[type="file"]').files[0]);
+
+            // Perform AJAX request to the Flask backend
+            fetch('/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading animation and show result
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('result').style.display = 'block';
+
+                // Display the prediction result
+                if (data.result === 'Real') {
+                    document.getElementById('result').innerHTML = "<h2>The video is <strong>Real</strong></h2>";
+                    document.getElementById('result').className = "result real";
+                } else if (data.result === 'Fake') {
+                    document.getElementById('result').innerHTML = "<h2>The video is <strong>Fake</strong></h2>";
+                    document.getElementById('result').className = "result fake";
+                }
+            })
+            .catch(error => {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                alert('Error occurred. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>
