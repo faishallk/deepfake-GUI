@@ -1,5 +1,5 @@
 # DeepFake GUI  
-A streamlined, GUI-powered application for detecting deepfakes using **ResNeXt50 + LSTM** architecture. Built to bridge the gap between cutting-edge deepfake detection research and practical, user-friendly applications.  
+A streamlined, GUI-Flask powered application for detecting deepfakes using **ResNeXt50 + LSTM** architecture.
 
 🚀 **Detection Goal**:  
 Classify videos/images into:  
@@ -15,6 +15,11 @@ Classify videos/images into:
 
 ---
 
-## 📦 Requirements  
-ipip install Flask tensorflow torch numpy pandas opencv-python dlib tqdm
-
+## 📦 Set Up a Virtual Environment
+- Create a virtual environment
+```python3 -m venv myenv```
+- Activate the virtual environment
+```source myenv/bin/activate```
+```myenv\Scripts\activate```
+- Install the Dependencies
+```pip install Flask tensorflow torch numpy pandas opencv-python dlib tqdm```
