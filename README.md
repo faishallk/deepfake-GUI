@@ -23,5 +23,5 @@ Classify videos/images into:
 ```myenv\Scripts\activate```
 - Install the Dependencies
 ```pip install Flask tensorflow torch numpy pandas opencv-python dlib tqdm```
-- Save the saved model (.pth) into 'model' folder
+- Put the saved model (.pth) into 'model' folder
 
